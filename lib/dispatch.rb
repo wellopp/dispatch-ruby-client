@@ -3,10 +3,9 @@ require 'httparty'
 require_relative 'dispatch/config'
 require_relative 'dispatch/delivery'
 require_relative 'dispatch/errors'
+require_relative 'dispatch/version'
 
 module Dispatch
-  VERSION = '0.1.0'.freeze
-
   @config = Config.new
 
   def self.config
