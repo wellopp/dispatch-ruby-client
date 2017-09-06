@@ -10,6 +10,11 @@ module Dispatch
 
   def self.config
     yield(@config) if block_given?
+    @config
+  end
+
+  def self.status
+    HTTParty.get("#{@config[:endpoint]}")
   end
 
   def self.find(guid)
