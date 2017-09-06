@@ -36,7 +36,7 @@ module Dispatch
     deliver(to: { phone_number: to }, body: body, test: test)
   end
 
-  def self.email(to:, from: nil, body: nil, attachments: nil, data: nil)
+  def self.email(to:, from: nil, body: nil, attachments: nil, data: nil, tags: nil)
     raise EmptyArgumentError.new(:to, to) if to.nil? || to.empty?
     if (body.nil? || body.empty?) && (attachments.nil? || attachments.empty?)
       raise EmptyArgumentError.new(:body, body)
@@ -46,7 +46,7 @@ module Dispatch
       raise EmptyArgumentError.new(:data, data)
     end
 
-    deliver(to: to, from: from, body: body, attachments: attachments, data: data)
+    deliver(to: to, from: from, body: body, attachments: attachments, data: data, tags: tags)
   end
 
   def self.deliver(options)
