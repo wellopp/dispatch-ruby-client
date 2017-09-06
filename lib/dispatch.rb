@@ -14,7 +14,7 @@ module Dispatch
   end
 
   def self.status
-    HTTParty.get("#{@config[:endpoint]}")
+    HTTParty.get(@config[:endpoint]).parsed_response['status']
   end
 
   def self.find(guid)
