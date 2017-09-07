@@ -57,7 +57,6 @@ module Dispatch
     raise EmptyArgumentError.new(:Endpoint, endpoint) if endpoint.nil? || endpoint.empty?
 
     params = { delivery: options.merge(app: app) }
-    puts params.inspect
 
     response = HTTParty.post("#{endpoint}/deliveries.json",
                              body: params.to_json,
