@@ -71,7 +71,7 @@ module Dispatch
     def sms(params)
       validate_params(SMS_PARAMS, params)
       validate_required(params, :to, :body)
-      validate_matches(/[^+0-9\(\)\s]/, 'phone number', to)
+      validate_matches(/^[+0-9\(\)\s\.]{10,}$/, 'phone number', params[:to])
 
       deliver(params.merge(tech: 'sms'))
     end
