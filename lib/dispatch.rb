@@ -87,9 +87,9 @@ module Dispatch
     def deliver(options)
       validate_required(@config, :app, :endpoint)
 
-      params = { delivery: options.compact.merge(app: app) }
+      params = { delivery: options.compact.merge(app: @config[:app]) }
 
-      response = HTTParty.post("#{endpoint}/deliveries.json",
+      response = HTTParty.post("#{@config[:endpoint]}/deliveries.json",
                                body: params.to_json,
                                headers: { 'Content-Type' => 'application/json' })
 
