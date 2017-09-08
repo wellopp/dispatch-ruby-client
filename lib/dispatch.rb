@@ -48,6 +48,8 @@ module Dispatch
     recipient_metadata
     attachments
     images
+    reply_to
+    test
   ).freeze
 
   @config = Config.new
@@ -83,11 +85,7 @@ module Dispatch
     end
 
     def deliver(options)
-      app = @config[:app]
-      endpoint = @config[:endpoint]
-
-      raise EmptyArgumentError.new(:App, app) if app.nil? || app.empty?
-      raise EmptyArgumentError.new(:Endpoint, endpoint) if endpoint.nil? || endpoint.empty?
+      validate_required(@config, :app, :endpoint)
 
       params = { delivery: options.compact.merge(app: app) }
 
