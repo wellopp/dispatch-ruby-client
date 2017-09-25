@@ -5,6 +5,7 @@ require_relative 'dispatch/delivery'
 require_relative 'dispatch/errors'
 require_relative 'dispatch/version'
 
+
 #
 # Dispatch Client
 #
@@ -132,3 +133,5 @@ module Dispatch
     end
   end
 end
+
+require_relative 'dispatch/engine' if defined?(Rails)

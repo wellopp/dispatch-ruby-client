@@ -3,3 +3,5 @@ module Dispatch
     isolate_namespace Dispatch
   end
 end
+
+require_relative '../../config/routes.rb'
