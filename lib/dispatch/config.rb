@@ -1,2 +1,2 @@
-class Config < Struct.new(:app, :endpoint)
+class Config < Struct.new(:app, :endpoint, :controller)
 end
