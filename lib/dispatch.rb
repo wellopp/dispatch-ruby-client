@@ -5,7 +5,6 @@ require_relative 'dispatch/delivery'
 require_relative 'dispatch/errors'
 require_relative 'dispatch/version'
 
-
 #
 # Dispatch Client
 #
