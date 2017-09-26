@@ -1,4 +1,5 @@
 module Dispatch
+  # Minor abstraction to wrap JSON responses from Dispatch
   class Delivery
     attr_reader :data
 
