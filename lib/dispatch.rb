@@ -52,6 +52,7 @@ module Dispatch
     images
     reply_to
     test
+    data
   ).freeze
 
   @config = Config.new
