@@ -104,7 +104,7 @@ module Dispatch
     def validate_params(source, params)
       params.each_pair do |key, _value|
         next if source.include?(key)
-        raise ::ArgumentError, "unknown parameter #{key}"
+        raise UnknownArgumentError, key
       end
     end
 
