@@ -13,9 +13,9 @@ require_relative 'dispatch/engine' if defined?(Rails)
 # Dispatch messages where they need to be
 #
 module Dispatch
-  SMS_PARAMS = %i(to body test).freeze
+  SMS_PARAMS = %i[to body test validate].freeze
 
-  EMAIL_PARAMS = %i(
+  EMAIL_PARAMS = %i[
     html
     text
     body
@@ -53,9 +53,13 @@ module Dispatch
     reply_to
     test
     data
-  ).freeze
+    validate
+  ].freeze
 
   @config = Config.new
+
+  include HTTParty
+  headers 'Content-Type' => 'application/json'
 
   class << self
     def config
@@ -64,11 +68,11 @@ module Dispatch
     end
 
     def status
-      HTTParty.get(@config[:endpoint]).parsed_response['status']
+      get(@config[:endpoint]).parsed_response['status']
     end
 
     def find(guid)
-      Delivery.parse HTTParty.get("#{@config[:endpoint]}/deliveries/#{guid}.json")
+      Delivery.parse get("#{@config[:endpoint]}/deliveries/#{guid}.json")
     end
 
     def sms(params)
@@ -76,27 +80,30 @@ module Dispatch
       validate_required(params, :to, :body)
       validate_matches(/^[+0-9\(\)\s\.]{10,}$/, 'phone number', params[:to])
 
+      return true if params[:validate]
+
       deliver(params.merge(tech: 'sms'))
     end
 
     def email(params)
       validate_params(EMAIL_PARAMS, params)
       validate_required(params, :to,
-                        body: -> { params[:attachments].nil? || params[:attachments].empty? })
+                        body: -> { blank? params[:attachments] })
+
+      return true if params[:validate]
 
       deliver(params.merge(tech: 'email'))
     end
 
     def deliver(options)
       validate_required(@config, :endpoint,
-                        key: -> { @config[:app].nil? || @config[:app].empty? },
-                        app: -> { @config[:key].nil? || @config[:key].empty? })
+                        key: -> { blank? @config[:app] },
+                        app: -> { blank? @config[:key] })
 
-      options = options.merge(key: @config[:key], app: @config[:app]).compact
+      options = options.merge(@config.slice(:app, :key)).compact
 
-      response = HTTParty.post("#{@config[:endpoint]}/deliveries.json",
-                               body: { delivery: options }.to_json,
-                               headers: { 'Content-Type' => 'application/json' })
+      response = post("#{@config[:endpoint]}/deliveries.json",
+                      body: { delivery: options }.to_json)
 
       Delivery.parse(response)
     end
@@ -118,12 +125,12 @@ module Dispatch
         if key.is_a?(Hash)
           key.each_pair do |nkey, proc|
             value = params[nkey]
-            invalid = (value.nil? || value.empty?) && proc.call
+            invalid = blank?(value) && proc.call
             raise EmptyArgumentError.new(nkey, value) if invalid
           end
         else
           value = params[key]
-          invalid = value.nil? || value.empty?
+          invalid = blank?(value)
           raise EmptyArgumentError.new(key, value) if invalid
         end
       end
@@ -134,6 +141,10 @@ module Dispatch
         next if value.match?(pattern)
         raise InvalidArgumentError.new(name, value)
       end
+    end
+
+    def blank?(value)
+      value.nil? || value.empty?
     end
   end
 end
