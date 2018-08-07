@@ -96,14 +96,10 @@ module Dispatch
     end
 
     def deliver(options)
-      validate_required(@config, :endpoint,
-                        key: -> { blank? @config[:app] },
-                        app: -> { blank? @config[:key] })
-
-      options = options.merge(@config.slice(:app, :key)).compact
+      validate_required(@config, :endpoint, :key)
 
       response = post("#{@config[:endpoint]}/deliveries.json",
-                      body: { delivery: options }.to_json)
+                      body: { key: @config[:key], delivery: options }.to_json)
 
       Delivery.parse(response)
     end

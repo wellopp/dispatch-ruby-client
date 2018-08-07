@@ -26,7 +26,7 @@ First, configure the app your code represents and the dispatch endpoint you're h
 
 ```ruby
 Dispatch.config do |c|
-  c.app = :my_app
+  c.key = 'randomly generated api key'
   c.endpoint = 'http://localhost:3000'
 end
 ```
@@ -69,7 +69,6 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/wellopp/dispatch-ruby-client/pulls.
-
 
 ## License
 
