@@ -54,6 +54,8 @@ module Dispatch
     test
     data
     validate
+    notifiable_id
+    notifiable_type
   ].freeze
 
   @config = Config.new
