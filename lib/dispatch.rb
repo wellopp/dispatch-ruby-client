@@ -13,7 +13,7 @@ require_relative 'dispatch/engine' if defined?(Rails)
 # Dispatch messages where they need to be
 #
 module Dispatch
-  SMS_PARAMS = %i[to body test validate].freeze
+  SMS_PARAMS = %i[to body test validate notifiable_id notifiable_type].freeze
 
   EMAIL_PARAMS = %i[
     html
